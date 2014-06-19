@@ -15,6 +15,15 @@
     <!-- AGS Admin CSS - Include with every page -->
     <link href="css/ags-admin.css" rel="stylesheet">
 
+    <!-- Latest CDN link for AngularJS -->
+    <script src="js/angular/angular.min.js" type="text/javascript"></script>
+
+    <!-- Including the app.js file -->
+    <script src="js/angular/app.js"></script>
+
+    <!-- Including the maincontroller.js file -->
+    <script src="js/angular/maincontroller.js"></script>
+
 </head>
 
 <body>
@@ -27,21 +36,23 @@
                         <h3 class="panel-title">Please Sign In</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form">
+                        <form role="form" id='content' ng-app='Login' ng-controller="LoginController">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
+                                    <input class="form-control" id="userUsername" ng-model="userUsername" placeholder="E-mail" name="email" type="text" autofocus value="BackOffice">
+                                    <label style="color: red;margin: 5px 0px 0px 0px;">{{userUsernameBlank}}</label>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                                    <input class="form-control" id="password" ng-model="userPassword" placeholder="Password" name="password" type="password" value="">
+                                    <label style="color: red;margin: 5px 0px 0px 0px;">{{userPasswordBlank}}</label>
                                 </div>
-                                <div class="checkbox">
-                                    <label>
-                                        <input name="remember" type="checkbox" value="Remember Me">Remember Me
-                                    </label>
+
+                                <div class="form-group">
+                                        
                                 </div>
+
                                 <!-- Change this to a button or input when using this as a form -->
-                                <a href="html/admin-home.html" class="btn btn-lg btn-primary btn-block">Login</a>
+                                <a href="" class="btn btn-lg btn-primary btn-block" ng-click="loginUser()">Login</a>
                             </fieldset>
                         </form>
                     </div>
