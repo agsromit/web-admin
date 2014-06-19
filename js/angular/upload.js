@@ -57,13 +57,13 @@ var MyCtrl = [ '$scope', '$http', '$timeout', '$upload',  function($scope, $http
 		$scope.errorMsg = null;
 		if ($scope.howToSend == 1) {
 			$scope.upload[index] = $upload.upload({
-				url : 'upload',
+				url : 'http://app.better-life.co.in/Nightingales/api/BackOffice/'+$scope.uploadType,
 				method: $scope.httpMethod,
 				headers: {'my-header': 'my-header-value'},
 				data : {
 					myModel : $scope.myModel
 				},
-				/* formDataAppender: function(fd, key, val) {
+				 formDataAppender: function(fd, key, val) {
 					if (angular.isArray(val)) {
                         angular.forEach(val, function(v) {
                           fd.append(key, v);
@@ -71,7 +71,7 @@ var MyCtrl = [ '$scope', '$http', '$timeout', '$upload',  function($scope, $http
                       } else {
                         fd.append(key, val);
                       }
-				}, */
+				}, 
 				/* transformRequest: [function(val, h) {
 					console.log(val, h('my-header')); return val + 'aaaaa';
 				}], */
@@ -92,7 +92,7 @@ var MyCtrl = [ '$scope', '$http', '$timeout', '$upload',  function($scope, $http
 			var fileReader = new FileReader();
             fileReader.onload = function(e) {
 		        $scope.upload[index] = $upload.http({
-		        	url: 'upload',
+		        	url: 'http://app.better-life.co.in/Nightingales/api/BackOffice/'+$scope.uploadType,
 					headers: {'Content-Type': $scope.selectedFiles[index].type},
 					data: e.target.result
 		        }).then(function(response) {
