@@ -8,7 +8,7 @@
 
     <title>Web Admin Portal</title>
 
-      <!-- Core CSS - Include with every page -->
+    <!-- Core CSS - Include with every page -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
 
@@ -19,6 +19,95 @@
     <!-- AGS Admin CSS - Include with every page -->
     <link href="../css/ags-admin.css" rel="stylesheet">
 
+    <!-- Latest CDN link for AngularJS -->
+    <script src="../js/angular/angular-file-upload-shim.js"></script>
+    <script type="text/javascript">
+    // load angularjs specific version
+    var angularVersion = window.location.hash.substring(1);
+    document.write('<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/' + (angularVersion || '1.2.0') + '/angular.js"><\/script>');
+    </script>
+    <script src="../js/angular/angular-file-upload.js"></script>
+    <script src="../js/angular/upload.js"></script>
+    <!-- <script src="http://cdn.jsdelivr.net/angular.file-upload/1.0.0/angular-file-upload.min.js"></script> -->  
+<style type="text/css">
+.sel-file {
+    padding: 1px 5px;
+    font-size: smaller;
+    color: grey;
+}
+
+.response {
+    padding-top: 30px;
+}
+
+.response>ul {
+    list-style-type: decimal;
+}
+
+.response li, .response .reqh {
+    color: blue;
+    font-size: smaller;
+    padding-bottom: 5px; 
+}
+
+.progress {
+    display: inline-block;
+    width: 100px;   
+    border: 3px groove #CCC;
+}
+
+.progress div {
+    font-size: smaller;
+    background: orange;
+    width: 0;
+}
+
+.drop-box {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    width: 200px;
+    height: 65px; 
+    text-align: center;
+    padding-top: 35px; 
+}
+
+.drop-box.dragover {
+    border: 5px dashed blue;
+}
+
+/* for IE*/
+.js-fileapi-wrapper {
+    display: inline-block;
+    vertical-align: middle; 
+}
+
+.ng-v {
+    float: right;
+}
+
+.sel-file img {
+    float: left;
+    width: 18px;
+    height: 18px;
+    padding-right: 10px;
+}
+
+.sub {
+    font-size: smaller;
+    color: #777;
+    padding-top: 5px;
+    padding-left: 10px;
+}
+
+.err {
+    font-size: 12px;
+    color: #C53F00;
+    margin: 15px;
+    padding: 15px;
+    background-color: #F0F0F0;
+    border: 1px solid black;
+}
+</style>
 </head>
 
 <body>
@@ -133,57 +222,95 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
-            <!-- /.row -->
+            
+            <!-- rcode starts here -->
             <div class="row">
                 <div class="col-lg-8">
-                <div class="panel panel-default">
+                    <div class="panel panel-default" ng-app="fileUpload" ng-controller="MyCtrl">
                         <div class="panel-heading">
                             Import
                         </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                    <!-- impoprt field -->
-                                           <div class="row">
-                                              <div class="col-md-4">
-                                           <div class="form-group">
-                                            <label>Choose file</label>
-                                            <input type="file" class="form-control" >
-                                             </div>
-                                           </div>
-                                           <div class="col-md-4">
-                                           <div class="form-group">
-                                                    <label>Select file type</label>
-                                                    <select id="disabledSelect" class="form-control">
-                                                    <option>Work Plan</option>
-                                                    <option>Area</option>
-                                                    <option>Services</option>
-                                                    <option>Consumables</option>
-                                                    <option>Staff</option>
-                                                    </select> 
-                                        
-                                        </div>
-                                           </div>
-                                           
-                                            <div class="col-md-4">
-                                           <div class="form-group">
-                                           <label>&nbsp;</label>
-                                           <input type="submit" class="btn btn-lg btn-primary btn-block" value="Import" >
+
+                        <div class="panel-body upload-div">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Choose file</label>
+                                        <input type="file" ng-file-select="onFileSelect($files)" onclick="this.value=null" class="form-control" style="width:212px;">
+                                    </div>
+                                </div>
+                            <!--<div class="ng-v">
+                                Angular Version: <input type="text" ng-model="angularVersion"> 
+                                <input type="button" data-ng-click="changeAngularVersion()" value="Go">
+                            </div>-->
+
+                          
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="upload-div">
+
+                                <!--or multiple files: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="file" ng-file-select="onFileSelect($files)" multiple onclick="this.value=null">
+                                <br/>
+                                <br/>-->
+                                <!--<div ng-show="dropSupported" class="drop-box" ng-file-drop="onFileSelect($files);" ng-file-drop-available="dropSupported=true">or drop files here</div>
+                                <div ng-show="!dropSupported">HTML5 Drop File is not supported on this browser</div>
+                                <br/>-->
+                                <input type="checkbox" ng-model="uploadRightAway" style="opacity:0;width: 0px;"><!--Upload right away-->
+                                    <label>Select file type</label>
+                                        <select id="disabledSelect" class="form-control" ng-model="uploadType">
+                                            <option value="ImportWorkPlan">Work Plan</option>
+                                            <option value="ImportArea">Area</option>
+                                            <option value="ImportMedicalServices">Services</option>
+                                            <option value="ImportMedicalServices">Consumables</option>
+                                            <option value="ImportStaff">Staff</option>
+                                        </select> 
+                                    </div>
+                                </div>        
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">        
+                                        <div ng-show="selectedFiles != null">
+                                            <div class="sel-file" ng-repeat="f in selectedFiles">
+                                                {{($index + 1) + '.'}}
+                                                <img ng-show="dataUrls[$index]" ng-src="{{dataUrls[$index]}}">
+                                                <button class="btn btn-lg btn-primary btn-block" ng-click="start($index)" ng-show="progress[$index] < 0">Import</button>
+                                                <span class="progress" ng-show="progress[$index] >= 0">                     
+                                                    <div style="width:{{progress[$index]}}%">{{progress[$index]}}%</div>
+                                                </span>             
+                                                <button class="button" ng-click="abort($index)" ng-show="hasUploader($index) && progress[$index] < 100">Abort</button>
+                                                {{f.name}} - size: {{f.size}}B - type: {{f.type}}
                                             </div>
-                                           </div>
-                                           
-                                           </div>
-                                           <!-- ./impoprt field -->
-                        </div>
-                        <!-- .panel-body -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="display:none;">
+                                <div class="col-lg-12">
+                                    <div class="response" ng-show="uploadResult.length > 0">
+                                        Server Response:
+                                        <ul>
+                                            <li ng-repeat="result in uploadResult">
+                                                <ul>
+                                                    <li ng-repeat="item in result.result">
+                                                        <div data-ng-show="item.name">file name: {{item.name}}</div>
+                                                        <div data-ng-show="item.fieldName">name: {{item.fieldName}}</div>
+                                                        <div data-ng-show="item.size">size on the serve: {{item.size}}</div>
+                                                        <div data-ng-show="item.value">value: {{item.value}}</div>
+                                                    </li>
+                                                </ul>
+                                                <div data-ng-show="result.requestHeaders" class="reqh">request headers: {{result.requestHeaders}}</div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display:none;position:fixed;bottom:10px;right:10px;font-size:smaller;color:#777">Last update: 2014-05-08</div>
                     </div>
-                    <!-- /.panel -->
-                  
-                
                 </div>
-                <!-- /.col-lg-8 -->
-             
             </div>
-            <!-- /.row -->
+            <!-- rcode starts here -->
+            
         </div>
         <!-- /#page-wrapper -->
 
